@@ -1,0 +1,2416 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────────────────────
+   THEME TOKENS
+
+   Every color that should adapt to light / dark mode is defined here as a
+   CSS custom property. The default (`:root`) values match the original
+   light palette of the site, so the look is unchanged when no theme is
+   set. `[data-theme="dark"]` overrides those values to produce the dark
+   variant. The theme is applied by setting `data-theme="dark"` on the
+   <html> element (see `app/layout.js` and the theme toggle button).
+
+   Keeping every theme decision in one block makes it easy to tweak the
+   palette later — we never have to chase hex values through the rest of
+   the stylesheet.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme="light"] {
+  --font-poppins: "Poppins", sans-serif;
+  --color-bg: #f9f8ff;
+  --color-bg-alt: #ffffff;
+  --color-text: #060607;
+  --color-text-muted: #555555;
+  --color-text-subtle: #888888;
+  --color-accent: #0016ec;
+  --color-accent-soft: #d9e6ff;
+  --color-border: #d9e6ff;
+  --color-btn-dark-bg: #2b2e3a;
+  --color-btn-dark-text: #d4d5d7;
+  --color-btn-light-bg: #e3e5ee;
+  --color-btn-light-text: #2b2e3a;
+  --color-btn-sm-bg: #e4e6ef;
+  /* Warm CTA color pulled from the hero photograph's card, used by the
+     header "Get started" pill and the hero's primary button. */
+  --color-brand-orange: #f15a22;
+  --color-brand-orange-dark: #d84a16;
+  /* Warm off-white used by the benefit cards and their eyebrow badge. */
+  --color-card-bg: #fcf8f2;
+  --color-card-border: #f0e8dc;
+  --color-badge-bg: #fdf1ea;
+  /* Pastel mesh behind the investments section. */
+  --pj-grad-base: #d8f0dd;
+  --pj-grad-1: #f0f0a6;
+  --pj-grad-2: #6fdcc4;
+  --pj-grad-3: #cbefdd;
+  --pj-fade-solid: #ffffff;
+  --pj-fade-clear: rgba(255, 255, 255, 0);
+  /* Sky blues behind the card panel — also the fallback when the photo of
+     the card is missing. Not theme-swapped: the panel is always the photo. */
+  --cx-blue-1: #6fbdf0;
+  --cx-blue-2: #2b7fd4;
+  --cx-blue-3: #7fd3f2;
+}
+
+[data-theme="dark"] {
+  --color-bg: #0a0a0c;
+  --color-bg-alt: #131318;
+  --color-text: #f9f8ff;
+  --color-text-muted: #a8a8ae;
+  --color-text-subtle: #6e6e76;
+  --color-accent: #4a83ff;
+  --color-accent-soft: #1b2540;
+  --color-border: #1f2942;
+  --color-btn-dark-bg: #f9f8ff;
+  --color-btn-dark-text: #060607;
+  --color-btn-light-bg: #1f2942;
+  --color-btn-light-text: #f9f8ff;
+  --color-btn-sm-bg: #1f2942;
+  --color-brand-orange: #ff6a33;
+  --color-brand-orange-dark: #f15a22;
+  --color-card-bg: #131318;
+  --color-card-border: #23232b;
+  --color-badge-bg: rgba(255, 106, 51, 0.14);
+  --pj-grad-base: #0b1512;
+  --pj-grad-1: #2a2e12;
+  --pj-grad-2: #0e3b36;
+  --pj-grad-3: #123028;
+  --pj-fade-solid: #131318;
+  --pj-fade-clear: rgba(19, 19, 24, 0);
+}
+
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+html,
+body {
+  overscroll-behavior: none;
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Site-wide body typeface — Poppins. The headlines opt out of it and use
+     Epilogue instead (see `#hero-title`, `.benefits` headline, `.pj-headline`
+     and `.bn-card__title`). Those elements also apply their own
+     `font-weight: 600` + tight letter-spacing at the element level; we
+     deliberately do NOT set those globally, because cascading semibold and
+     negative tracking onto every paragraph, button and small UI label makes
+     body copy feel heavy and lets characters overlap. */
+  font-family: var(--font-poppins), "Poppins", sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  /* Smooth color crossfade when the user toggles themes. Limited to color
+     properties so it doesn't accidentally animate layout-affecting things. */
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+img,
+svg,
+video {
+  pointer-events: none;
+  max-width: 100%;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+}
+
+.nav_btn_lg {
+  @apply rounded-full px-5 h-10 font-[600] text-sm mx-2 font-AeonikMedium;
+}
+.nav_btn_dark {
+  background-color: var(--color-btn-dark-bg);
+  color: var(--color-btn-dark-text);
+}
+.nav_btn_light {
+  color: var(--color-btn-light-text);
+  background-color: var(--color-btn-light-bg);
+}
+
+.nav_btn_sm {
+  @apply rounded-full w-10 h-10 mx-2;
+  background-color: var(--color-btn-sm-bg);
+  color: var(--color-btn-light-text);
+}
+
+@font-face {
+  font-family: "Aeonik";
+  src: url("/fonts/Aeonik/Aeonik-Regular.otf") format("opentype");
+}
+@font-face {
+  font-family: "AeonikBold";
+  src: url("/fonts/Aeonik/Aeonik-Bold.otf") format("opentype");
+}
+@font-face {
+  font-family: "AeonikMedium";
+  src: url("/fonts/Aeonik/Aeonik-Medium.otf") format("opentype");
+}
+
+.container {
+  margin: 0 auto;
+  width: 250px;
+  height: 200px;
+  position: relative;
+  perspective: 1000px;
+}
+
+.carousel {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+}
+
+.item {
+  display: block;
+  position: absolute;
+  background: #000;
+  width: 400px;
+  height: 100px;
+  line-height: 200px;
+  font-size: 5em;
+  text-align: center;
+  color: #fff;
+  opacity: 0.95;
+  border-radius: 10px;
+}
+
+.a {
+  transform: rotateX(0deg) translateZ(250px);
+  background: #ed1c24;
+}
+.b {
+  transform: rotateX(60deg) translateZ(250px);
+  background: #0072bc;
+}
+.c {
+  transform: rotateX(120deg) translateZ(250px);
+  background: #39b54a;
+}
+.d {
+  transform: rotateX(180deg) translateZ(250px);
+  background: #f26522;
+}
+.e {
+  transform: rotateX(240deg) translateZ(250px);
+  background: #630460;
+}
+.f {
+  transform: rotateX(300deg) translateZ(250px);
+  background: #8c6239;
+}
+
+/* ── LOADER ── */
+
+#loader {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  inset: 0;
+  z-index: 100002;
+  touch-action: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  background-color: black;
+}
+
+#loader-counter {
+  color: #f9f8ff;
+  font-size: 6vw;
+  font-family: var(--font-poppins), "Poppins", sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.07em;
+  padding: 2vw 3vw;
+  pointer-events: none;
+}
+
+/* ── FLOATING HEADER ──
+   A pill-shaped bar that hovers over the hero. Two scroll-driven states are
+   toggled from `Navbar.jsx` and animated entirely with CSS transitions:
+     .is-scrolled → the pill condenses (narrower, tighter, solid + shadow)
+     .is-hidden   → slides out of view while the user scrolls down */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100001;
+  padding: 1.35rem clamp(1rem, 3vw, 2.5rem);
+  pointer-events: none;
+  transition:
+    padding 0.45s cubic-bezier(0.22, 0.85, 0.24, 1),
+    transform 0.45s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.site-header.is-scrolled {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+}
+
+.site-header.is-hidden {
+  transform: translateY(-135%);
+}
+
+.site-header__bar {
+  pointer-events: auto;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0.6rem 0.55rem 1.4rem;
+  border-radius: 999px;
+  /* Plain fallback first for engines without color-mix() support. */
+  background: var(--color-bg-alt);
+  background: color-mix(in srgb, var(--color-bg-alt) 88%, transparent);
+  border: 1px solid transparent;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px -18px rgba(6, 6, 7, 0.35);
+  transition:
+    max-width 0.45s cubic-bezier(0.22, 0.85, 0.24, 1),
+    padding 0.45s cubic-bezier(0.22, 0.85, 0.24, 1),
+    background-color 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.site-header.is-scrolled .site-header__bar {
+  max-width: 1040px;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  background: var(--color-bg-alt);
+  border-color: var(--color-border);
+  box-shadow: 0 18px 40px -22px rgba(6, 6, 7, 0.5);
+}
+
+/* Logo slot. The artwork ships with roughly 28% transparent padding baked
+   into the PNG, so the image is rendered taller than its slot and absolutely
+   positioned — that way the visible mark reads at the right size without the
+   empty margins inflating the height of the bar. */
+.hd-logo {
+  position: relative;
+  flex-shrink: 0;
+  width: 6.5rem;
+  height: 2.5rem;
+}
+
+.hd-logo__img {
+  position: absolute;
+  top: 50%;
+  left: -0.4rem;
+  transform: translateY(-50%);
+  height: 3.6rem;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+}
+
+.hd-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.2vw, 2rem);
+  margin: 0 auto;
+}
+
+.hd-nav__link {
+  position: relative;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+}
+
+.hd-nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.4rem;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-brand-orange);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.hd-nav__link:hover {
+  color: var(--color-text);
+}
+
+.hd-nav__link:hover::after {
+  transform: scaleX(1);
+}
+
+.hd-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.hd-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hd-icon-btn:hover {
+  background: var(--color-accent-soft);
+  transform: translateY(-1px);
+}
+
+.hd-login {
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  transition: background-color 0.2s ease;
+}
+
+.hd-login:hover {
+  background: var(--color-accent-soft);
+}
+
+.hd-cta {
+  padding: 0.65rem 1.35rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-brand-orange);
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hd-cta:hover {
+  background: var(--color-brand-orange-dark);
+  transform: translateY(-1px);
+}
+
+/* The dropdown MENU button keeps its original open/close animation; it just
+   lives inside the new bar now. */
+.hd-menu .nav_btn_lg {
+  margin-left: 0.25rem;
+  margin-right: 0;
+}
+
+.hd-burger {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .hd-nav,
+  .hd-login,
+  .hd-cta,
+  .hd-menu {
+    display: none;
+  }
+
+  .hd-burger {
+    display: flex;
+  }
+
+  .site-header__bar {
+    padding-left: 1rem;
+  }
+
+  .hd-logo {
+    margin-right: auto;
+    width: 5.5rem;
+  }
+
+  .hd-logo__img {
+    height: 3rem;
+  }
+}
+
+/* ── HERO SECTION ── */
+
+#hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 34rem;
+  overflow: hidden;
+  background-color: #0b0b0d;
+  display: flex;
+  align-items: flex-end;
+}
+
+#hero-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+#hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  will-change: transform;
+}
+
+/* Two-stop scrim: a soft top wash so the floating header stays readable, and
+   a much heavier bottom gradient behind the headline and body copy. */
+#hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(8, 10, 14, 0.86) 0%,
+    rgba(8, 10, 14, 0.62) 26%,
+    rgba(8, 10, 14, 0.12) 55%,
+    rgba(8, 10, 14, 0.05) 100%
+  );
+}
+
+#hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 3vw, 2.5rem) clamp(5rem, 5vh, 4rem);
+  color: #fff;
+}
+
+#hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: clamp(1rem, 2.5vh, 1.75rem);
+}
+
+.hero-badge__flags {
+  display: inline-flex;
+  align-items: center;
+}
+
+.hero-badge__flag {
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.hero-badge__flag + .hero-badge__flag {
+  margin-left: -0.55rem;
+}
+
+.hero-badge__flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-badge__text {
+  font-size: clamp(0.68rem, 0.9vw, 0.8rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+#hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+#hero-title {
+  margin: 0;
+  font-family: var(--font-epilogue), "Epilogue", sans-serif;
+  font-size: clamp(2.6rem, 6.2vw, 5.6rem);
+  font-weight: 600;
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+  color: #fff;
+}
+
+/* Each line is a clipping window so the reveal slides the text up from
+   behind its own baseline instead of fading in place. */
+/* The clipping window has to be taller than the line box, otherwise the tight
+   1.03 line-height crops descenders (the "g" in "global"). The padding adds
+   that room and the matching negative margin keeps the visual line spacing
+   unchanged. */
+.hero-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+}
+
+.hero-line__inner {
+  display: block;
+  will-change: transform;
+}
+
+#hero-aside {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.5vh, 1.6rem);
+  padding-bottom: 0.6rem;
+}
+
+#hero-lede {
+  margin: 0;
+  max-width: 34ch;
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+#hero-actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.5vw, 1.5rem);
+  flex-wrap: wrap;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.hero-btn--primary {
+  padding: 0.95rem 2.2rem;
+  border-radius: 999px;
+  background: var(--color-brand-orange);
+  color: #fff;
+  box-shadow: 0 14px 30px -14px rgba(241, 90, 34, 0.9);
+}
+
+.hero-btn--primary:hover {
+  background: var(--color-brand-orange-dark);
+  transform: translateY(-2px);
+}
+
+.hero-btn--ghost {
+  padding: 0.95rem 0.4rem;
+  color: #fff;
+  opacity: 0.9;
+}
+
+.hero-btn--ghost:hover {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+/* ── PROJECTS SECTION ── */
+
+#projects-section {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: clamp(3.5rem, 7vw, 7rem) clamp(1.25rem, 4vw, 4rem) clamp(4rem, 8vw, 8rem);
+  color: var(--color-text);
+  font-family: var(--font-poppins), "Poppins", sans-serif;
+  /* Soft mesh gradient: three overlapping radial washes over a base tint. */
+  background:
+    radial-gradient(120% 95% at 4% -5%, var(--pj-grad-1) 0%, transparent 55%),
+    radial-gradient(115% 105% at 102% 12%, var(--pj-grad-2) 0%, transparent 62%),
+    radial-gradient(95% 85% at 55% 105%, var(--pj-grad-3) 0%, transparent 65%), var(--pj-grad-base);
+}
+
+/* ── BENEFITS SECTION (#about) ──
+   Centred eyebrow + title over a 3-column card grid. Cards alternate
+   2/3 + 1/3 → 1/3 + 2/3 across the two rows. */
+
+/* Full-bleed on purpose: the headline and the Skiggle ribbon keep the
+   left-aligned composition the section had before the redesign. */
+.benefits {
+  padding-right: clamp(1rem, 4vw, 3rem);
+  color: var(--color-text);
+  font-family: var(--font-poppins), "Poppins", sans-serif;
+}
+
+.benefits__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: var(--color-badge-bg);
+  color: var(--color-brand-orange);
+  font-size: clamp(0.6rem, 0.75vw, 0.7rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Centred in the section and capped so cards don't stretch forever on
+   ultra-wide screens. The headline above it stays left-aligned. */
+.benefits__grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* The row height sets the card height: cards are one layer now, so there
+     is no text panel adding to it. Sized so the two-column card lands near
+     the artwork's own 3:2 proportion and crops only lightly. */
+  grid-auto-rows: clamp(16rem, 28.5vw, 25rem);
+  gap: clamp(0.9rem, 1.6vw, 1.5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1340px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Single-layer card: the artwork fills the whole tile and the copy is laid
+   over its bottom edge — there is no separate panel beneath the image.
+   Cards stage themselves in as the grid enters the viewport; the per-card
+   delay is set inline so the stagger follows reading order. */
+.bn-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: clamp(1rem, 1.5vw, 1.5rem);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 0.85, 0.24, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.benefits__grid.is-visible .bn-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bn-card--wide {
+  grid-column: span 2;
+}
+
+.bn-card__media {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bn-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform-origin: center;
+  transition:
+    transform 0.7s cubic-bezier(0.22, 0.85, 0.24, 1),
+    filter 0.5s ease;
+}
+
+.bn-card__media--empty {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-card-bg),
+    var(--color-card-bg) 12px,
+    var(--color-card-border) 12px,
+    var(--color-card-border) 13px
+  );
+}
+
+.bn-card__placeholder {
+  padding: 0.6rem 1.1rem;
+  border: 1px dashed var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-card-bg);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+/* Copy sits on top of the artwork, pinned to the bottom-left. */
+.bn-card__body {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 clamp(1.25rem, 2vw, 2rem) clamp(1.1rem, 1.6vw, 1.6rem);
+  transition: transform 0.5s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+/* Soft wash behind the copy. The artwork is fully opaque with a near-white
+   backdrop, so this is invisible over the light areas but keeps the text
+   readable if a photo runs dark right up to the bottom edge. */
+.bn-card__body::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -4rem 0 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(255, 255, 255, 0.8) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+/* Deliberately theme-independent: the card artwork is a light-background
+   photo in both light and dark mode, so the overlaid copy must stay dark
+   either way. Using --color-text here would turn it white and unreadable. */
+.bn-card__title {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-epilogue), "Epilogue", sans-serif;
+  font-size: clamp(1.2rem, 1.85vw, 1.7rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  color: #14110f;
+  transition:
+    color 0.35s ease,
+    transform 0.5s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.bn-card__text {
+  margin: 0;
+  /* Wide enough that the two-column cards keep their copy on a single line;
+     the narrow cards wrap naturally on their own width. */
+  max-width: 80ch;
+  font-size: clamp(0.85rem, 1vw, 0.98rem);
+  line-height: 1.55;
+  color: #55504b;
+  transition: color 0.35s ease;
+}
+
+/* ── Card hover ──
+   The photo pushes in, the copy slides up a touch and the title picks up the
+   brand orange. Scoped to `.is-visible` so the hover transform wins over the
+   reveal transform, and to fine pointers so nothing sticks after a tap. */
+@media (hover: hover) and (pointer: fine) {
+  .benefits__grid.is-visible .bn-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-brand-orange);
+    box-shadow: 0 26px 54px -30px rgba(6, 6, 7, 0.5);
+  }
+
+  .bn-card:hover .bn-card__media img {
+    transform: scale(1.06);
+    filter: saturate(1.08);
+  }
+
+  .bn-card:hover .bn-card__body {
+    transform: translateY(-4px);
+  }
+
+  .bn-card:hover .bn-card__title {
+    color: var(--color-brand-orange);
+    transform: translateX(3px);
+  }
+
+  .bn-card:hover .bn-card__text {
+    color: #14110f;
+  }
+}
+
+@media (max-width: 767px) {
+  .benefits__grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: clamp(14.5rem, 64vw, 20rem);
+  }
+
+  .bn-card--wide {
+    grid-column: span 1;
+  }
+
+  .benefits__badge {
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* -- Top block: headline left, supporting copy + CTA right -- */
+
+.pj-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.55fr);
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  max-width: 1340px;
+  margin: 0 auto;
+}
+
+.pj-headline {
+  margin: 0;
+  font-family: var(--font-epilogue), "Epilogue", sans-serif;
+  font-size: clamp(1.9rem, 4.3vw, 3.85rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  color: var(--color-text);
+}
+
+/* Clipping window for the line-by-line reveal. The padding gives descenders
+   room the tight line-height would otherwise crop; the negative margin puts
+   the line spacing back. */
+.pj-head__mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.pj-head__line {
+  display: block;
+  will-change: transform;
+}
+
+.pj-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(0.9rem, 1.5vw, 1.4rem);
+  padding-top: clamp(0.4rem, 1.2vw, 1.4rem);
+}
+
+.pj-aside__text {
+  margin: 0;
+  font-size: clamp(0.85rem, 3vw, 1.2rem);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.pj-aside__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.75rem;
+  border-radius: 999px;
+  background: var(--color-brand-orange);
+  color: #fff;
+  font-weight: 600;
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  white-space: nowrap;
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.pj-aside__btn:hover {
+  background: var(--color-brand-orange-dark);
+  transform: translateY(-2px);
+}
+
+/* -- Panel: copy on the left, looping clip bleeding off the right -- */
+
+.pj-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  max-width: 1340px;
+  margin: clamp(2rem, 4vw, 3.5rem) auto 0;
+  min-height: clamp(19rem, 32vw, 28rem);
+  border-radius: clamp(1.25rem, 2vw, 2rem);
+  overflow: hidden;
+  background: var(--color-bg-alt);
+  box-shadow: 0 30px 70px -45px rgba(6, 6, 7, 0.45);
+}
+
+.pj-panel__content {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.75rem, 3.2vw, 3.5rem);
+}
+
+.pj-panel__title {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.pj-panel__subtitle {
+  margin: 0.55rem 0 0;
+  font-size: clamp(0.85rem, 1vw, 0.98rem);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* `flex: 1` + `space-between` lets the list absorb whatever height the panel
+   has left, so the items spread down the column instead of bunching at the
+   top and leaving a void above the fold. The gap is the minimum spacing. */
+.pj-features {
+  list-style: none;
+  flex: 1;
+  margin: clamp(1.2rem, 2.2vw, 2rem) 0 0;
+  padding: clamp(1.2rem, 2.2vw, 2rem) 0 0;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+}
+
+.pj-feature__title {
+  margin: 0 0 0.3rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.pj-feature__body {
+  margin: 0;
+  font-size: clamp(0.8rem, 0.95vw, 0.92rem);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* Closes the column: sits under the list and gives the block a bottom edge. */
+.pj-panel__link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.5rem;
+  margin-top: clamp(1.2rem, 2.2vw, 2rem);
+  padding-top: clamp(1.1rem, 2vw, 1.6rem);
+  border-top: 1px solid var(--color-border);
+  width: 100%;
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  font-weight: 600;
+  color: var(--color-brand-orange);
+  transition: gap 0.25s ease;
+}
+
+.pj-panel__link:hover {
+  gap: 0.9rem;
+}
+
+.pj-panel__media {
+  position: relative;
+  overflow: hidden;
+}
+
+.pj-panel__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Feathers the clip into the panel so there is no hard vertical seam. */
+.pj-panel__fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to right, var(--pj-fade-solid) 0%, var(--pj-fade-clear) 46%);
+}
+
+.pj-panel__media--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-bg-alt),
+    var(--color-bg-alt) 12px,
+    var(--color-border) 12px,
+    var(--color-border) 13px
+  );
+}
+
+.pj-panel__placeholder {
+  position: relative;
+  z-index: 1;
+  padding: 0.6rem 1.1rem;
+  border: 1px dashed var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-bg-alt);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+@media (max-width: 1023px) {
+  .pj-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pj-aside {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .pj-panel {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .pj-panel__media {
+    height: 14rem;
+  }
+
+  /* Stacked layout - the seam is now horizontal, so the fade turns with it. */
+  .pj-panel__fade {
+    background: linear-gradient(to bottom, var(--pj-fade-solid) 0%, var(--pj-fade-clear) 42%);
+  }
+}
+
+/* ── APP SHOWCASE SECTION (#app-section) ──
+   Copy on the left, product shot on the right. Sits between the pastel
+   investments block and the horizontal scroller, so it uses the plain site
+   background as a palette break. */
+
+#app-section {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: clamp(3.5rem, 7vw, 7rem) clamp(1.25rem, 4vw, 4rem);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.app-showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: 1340px;
+  margin: 0 auto;
+}
+
+.app-showcase__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: var(--color-badge-bg);
+  color: var(--color-brand-orange);
+  font-size: clamp(0.6rem, 0.75vw, 0.7rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.app-headline {
+  margin: clamp(1rem, 1.8vw, 1.5rem) 0 0;
+  font-family: var(--font-epilogue), "Epilogue", sans-serif;
+  font-size: clamp(1.9rem, 4vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  color: var(--color-text);
+}
+
+/* Clipping window for the line reveal; the padding gives descenders room the
+   tight line-height would otherwise crop, the negative margin puts the line
+   spacing back. */
+.app-head__mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.app-head__line {
+  display: block;
+  will-change: transform;
+}
+
+.app-lede {
+  margin: clamp(0.9rem, 1.6vw, 1.35rem) 0 0;
+  max-width: 46ch;
+  font-size: clamp(0.9rem, 1.05vw, 1.02rem);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.app-features {
+  list-style: none;
+  width: 100%;
+  margin: clamp(1.4rem, 2.6vw, 2.25rem) 0 0;
+  padding: clamp(1.4rem, 2.6vw, 2.25rem) 0 0;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.1rem, 1.9vw, 1.6rem);
+}
+
+.app-feature__title {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-epilogue), "Epilogue", sans-serif;
+  font-size: clamp(1.02rem, 1.4vw, 1.3rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.app-feature__body {
+  margin: 0;
+  font-size: clamp(0.8rem, 0.95vw, 0.92rem);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.app-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.25rem, 2.6vw, 2.5rem);
+  width: 100%;
+  margin-top: clamp(1.4rem, 2.6vw, 2.25rem);
+  padding-top: clamp(1.4rem, 2.6vw, 2.25rem);
+  border-top: 1px solid var(--color-border);
+}
+
+.app-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.app-stat__value {
+  font-family: var(--font-epilogue), "Epilogue", sans-serif;
+  font-size: clamp(1.3rem, 2.1vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--color-brand-orange);
+}
+
+.app-stat__label {
+  font-size: clamp(0.72rem, 0.85vw, 0.82rem);
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.app-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(1.5rem, 2.8vw, 2.5rem);
+  padding: 0.95rem 2.1rem;
+  border-radius: 999px;
+  background: var(--color-brand-orange);
+  color: #fff;
+  font-weight: 600;
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  white-space: nowrap;
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.app-cta:hover {
+  background: var(--color-brand-orange-dark);
+  transform: translateY(-2px);
+}
+
+/* The artwork is a cut-out on a transparent background, so it floats free.
+   Sized by `width` with `height: auto` and no fixed-ratio box: with
+   `object-fit` inside a ratio box the image is scaled down to fit and
+   letterboxed, so it can never grow past its container. Over 100% here, so
+   it overhangs the column. */
+.app-showcase__media {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-showcase__media img {
+  width: clamp(20rem, 124%, 60rem);
+  height: auto;
+  max-width: none;
+}
+
+/* The placeholder still needs a box of its own — there's no artwork to give
+   it one. */
+.app-showcase__media--empty {
+  min-height: clamp(16rem, 28vw, 24rem);
+  border-radius: clamp(1.25rem, 2vw, 2rem);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-bg-alt),
+    var(--color-bg-alt) 12px,
+    var(--color-border) 12px,
+    var(--color-border) 13px
+  );
+}
+
+.app-showcase__placeholder {
+  padding: 0.6rem 1.1rem;
+  border: 1px dashed var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-bg-alt);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+@media (max-width: 1023px) {
+  .app-showcase {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Product shot leads on narrow screens, copy follows. */
+  .app-showcase__media {
+    order: -1;
+  }
+
+  .app-showcase__media img {
+    width: clamp(18rem, 106%, 44rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .app-cta {
+    width: 100%;
+  }
+}
+
+/* ── CARD SHOWCASE SECTION (#card-section) ──
+   Rounded blue panel: the product photo fills it, the copy sits top-left over
+   a wash, and four white feature tiles line the bottom. */
+
+/* Generous padding on both ends: the cut-out overshoots the panel by roughly
+   a third of its height at each edge, and this is the room it needs so it
+   never collides with the sections above or below. */
+#card-section {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: clamp(6rem, 3vw, 13rem) clamp(1rem, 3vw, 3rem) clamp(6rem, 3vw, 13rem);
+  background-color: var(--color-bg);
+}
+
+/* `overflow: visible` on purpose — the cut-out photo is meant to break past
+   the panel's top edge. The blue gradient is the panel's own background, so
+   it still clips itself to the rounded corners. */
+.cx-panel {
+  position: relative;
+  overflow: visible;
+  max-width: 1340px;
+  margin: 0 auto;
+  border-radius: clamp(1.25rem, 2.4vw, 2.25rem);
+  /* Also the fallback if the photo is missing. */
+  background:
+    radial-gradient(120% 90% at 0% 100%, var(--cx-blue-3) 0%, transparent 60%),
+    linear-gradient(160deg, var(--cx-blue-1) 0%, var(--cx-blue-2) 100%);
+}
+
+/* Clipping window for the cut-out. It starts above the panel and ends flush
+   with its bottom edge, so `overflow: hidden` trims the wrist at the base
+   while leaving the overhang at the top untouched. The bottom-right radius
+   matches the panel's, for the widths where this reaches that corner. */
+.cx-panel__media {
+  position: absolute;
+  z-index: 1;
+  top: -24%;
+  bottom: 0;
+  right: clamp(0rem, 2vw, 3rem);
+  width: clamp(26rem, 72%, 60rem);
+  max-width: 72%;
+  overflow: hidden;
+  pointer-events: none;
+  border-bottom-right-radius: clamp(1.25rem, 2.4vw, 2.25rem);
+}
+
+/* Sized by `width` with `height: auto` — NOT by a box plus `object-fit`.
+   With `contain`, a box taller than it is wide scales the image down to the
+   width and letterboxes the rest, so the artwork never reaches the box edges
+   and nothing ever overhangs. Anchored to the top of the window so the crop
+   always lands on the wrist, never on the card.
+   No drop-shadow: the overhang crosses onto the plain page background, where
+   a cast shadow reads as grime. */
+.cx-panel__bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+
+.cx-panel__wash {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(10, 40, 80, 0.3) 0%,
+    rgba(10, 40, 80, 0.1) 45%,
+    rgba(10, 40, 80, 0) 72%
+  );
+}
+
+.cx-panel__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(3rem, 5vw, 8rem);
+  min-height: clamp(30rem, 46vw, 42rem);
+  padding: clamp(1.5rem, 2.8vw, 2.75rem);
+  /* The tiles need more room under them than the sides get, otherwise they
+     sit almost flush against the panel's bottom edge. */
+  padding-bottom: clamp(2.75rem, 5vw, 5rem);
+}
+
+.cx-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Outlined pill, matching the reference's ghost badge on the photo. */
+.cx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  color: #fff;
+  font-size: clamp(0.58rem, 0.72vw, 0.68rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.cx-badge svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+}
+
+.cx-headline {
+  margin: clamp(0.9rem, 1.6vw, 1.4rem) 0 0;
+  font-family: var(--font-epilogue), "Epilogue", sans-serif;
+  font-size: clamp(2.1rem, 4.6vw, 4rem);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  color: #fff;
+}
+
+.cx-head__mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.cx-head__line {
+  display: block;
+  will-change: transform;
+}
+
+.cx-lede {
+  margin: clamp(0.8rem, 1.4vw, 1.2rem) 0 0;
+  font-size: clamp(0.82rem, 0.95vw, 0.95rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cx-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.6rem, 1.2vw, 1.1rem);
+}
+
+/* Deliberately theme-independent: these tiles always sit on the blue photo,
+   so they stay white with dark type in both light and dark mode. */
+.cx-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: clamp(9rem, 13vw, 11.5rem);
+  padding: clamp(1.05rem, 1.7vw, 1.6rem);
+  border-radius: clamp(0.75rem, 1.1vw, 1rem);
+  background: #fff;
+  box-shadow: 0 18px 40px -28px rgba(6, 20, 40, 0.55);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 0.85, 0.24, 1),
+    box-shadow 0.4s ease;
+}
+
+/* Accent rule that wipes in along the bottom edge on hover. */
+.cx-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--color-brand-orange);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.cx-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.35rem;
+  height: 2.35rem;
+  margin-bottom: 0.9rem;
+  border-radius: 0.65rem;
+  /* Literal values, not the theme tokens: the tile is white in both themes,
+     so a token that swaps to a dark fill would break the contrast here. */
+  background: #fdf1ea;
+  color: var(--color-brand-orange);
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    transform 0.45s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.cx-card__icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+/* `margin-top: auto` pins the copy to the bottom of the tile, so all four
+   line up no matter how long each description runs — the old fixed margin on
+   the icon only lined them up while every card had the same amount of text. */
+.cx-card__title {
+  margin: auto 0 0.3rem;
+  font-family: var(--font-epilogue), "Epilogue", sans-serif;
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #14110f;
+  transition:
+    color 0.3s ease,
+    transform 0.4s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.cx-card__body {
+  margin: 0;
+  font-size: clamp(0.72rem, 0.85vw, 0.82rem);
+  line-height: 1.5;
+  color: #6b645e;
+  transition: color 0.3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cx-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 55px -26px rgba(6, 20, 40, 0.7);
+  }
+
+  .cx-card:hover::after {
+    transform: scaleX(1);
+  }
+
+  .cx-card:hover .cx-card__icon {
+    background: var(--color-brand-orange);
+    color: #fff;
+    transform: translateY(-3px) rotate(-8deg);
+  }
+
+  .cx-card:hover .cx-card__title {
+    color: var(--color-brand-orange);
+    transform: translateX(3px);
+  }
+
+  .cx-card:hover .cx-card__body {
+    color: #14110f;
+  }
+}
+
+@media (max-width: 1023px) {
+  .cx-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cx-panel__inner {
+    min-height: clamp(32rem, 82vw, 44rem);
+  }
+
+  /* Narrower panel: the cut-out keeps overhanging the top but at a smaller
+     scale so it doesn't crowd the copy or the tiles. */
+  .cx-panel__media {
+    top: -14%;
+    width: clamp(20rem, 80%, 40rem);
+    max-width: 80%;
+    right: -6%;
+  }
+}
+
+@media (max-width: 560px) {
+  .cx-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Stacked single column: the tile turns into a row, so the min-height and
+     the `margin-top: auto` that push the copy down no longer apply. */
+  .cx-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    min-height: 0;
+  }
+
+  .cx-card__icon {
+    margin-bottom: 0;
+  }
+
+  .cx-card__title {
+    flex: 1;
+    margin: 0;
+  }
+
+  .cx-card__body {
+    flex-basis: 100%;
+  }
+
+  .cx-copy {
+    max-width: none;
+  }
+
+  .cx-panel__media {
+    top: -9%;
+    width: clamp(16rem, 92%, 28rem);
+    max-width: 92%;
+    opacity: 0.9;
+  }
+}
+
+/* ── HORIZONTAL SCROLL SECTION ── */
+
+.Horizontal {
+  /* Height is intentionally `auto` — ScrollTrigger.pin wraps `.hs-sticky` in
+     a pin-spacer whose height equals the pin distance + viewport, and that
+     spacer needs to grow this section's box so subsequent sections (Subscribe
+     → footer) are pushed down by exactly that amount. A fixed height here
+     would clamp the section to one viewport and let the footer slide in
+     before the animation is finished. */
+  position: relative;
+  width: 100%;
+  height: auto;
+  background-color: var(--color-bg);
+  z-index: 1;
+}
+
+.Horizontal .hs-sticky {
+  position: relative;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--color-bg);
+}
+
+.Horizontal__text {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  gap: 4vw;
+  padding-left: 100vw;
+  font-family: var(--font-poppins), "Poppins", sans-serif;
+  pointer-events: none;
+  margin: 0;
+}
+
+.Horizontal .heading-xl {
+  font-size: clamp(2rem, 14vw, 12rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--color-text);
+  letter-spacing: -0.07em;
+  text-transform: lowercase;
+}
+
+.hs-char {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ── FEATURED HEADER (Beyond Visions / Within Reach) ── */
+.featured-header {
+  font-size: 9rem;
+  line-height: 1;
+}
+
+@media (max-width: 1024px) {
+  .featured-header {
+    font-size: 5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .featured-header {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .featured-header {
+    font-size: 2.25rem;
+  }
+}
+
+/* ── CONTACT SECTION ── */
+
+#contact-section {
+  width: 100%;
+  height: 90vh;
+  background-color: var(--color-bg);
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-poppins), "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 6vw;
+  gap: 1vw;
+}
+
+#ct-eyebrow {
+  color: var(--color-text-muted);
+  font-size: 1vw;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+  margin-bottom: 0.4vw;
+}
+
+#ct-headline {
+  pointer-events: none;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#ct-headline img {
+  width: clamp(18rem, 60vw, 55rem);
+  height: clamp(8rem, 22vw, 20rem);
+  max-width: 100%;
+  object-fit: contain;
+}
+
+#ct-email {
+  color: var(--color-text);
+  font-size: 1.4vw;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  border-bottom: 1.5px solid currentColor;
+  padding-bottom: 0.2vw;
+  margin-top: 1vw;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+#ct-email:hover {
+  color: #ff5900;
+  border-color: #ff5900;
+}
+
+#ct-actions {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+  margin-top: 1.6vw;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#ct-btn,
+#ct-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vw;
+  padding: 0 2vw;
+  height: 4vw;
+  min-height: 48px;
+  border-radius: 5vw;
+  text-decoration: none;
+  font-size: 0.85vw;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  cursor: pointer;
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease,
+    transform 0.3s ease;
+  white-space: nowrap;
+}
+
+#ct-btn {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  border: 2px solid var(--color-text);
+}
+
+#ct-btn:hover {
+  background-color: #fe5901;
+  border-color: #fe5901;
+  color: var(--color-bg);
+  transform: translateY(-2px);
+}
+
+#ct-btn-secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 2px solid var(--color-text);
+}
+
+#ct-btn-secondary:hover {
+  background-color: #ff5900;
+  border-color: #ff5900;
+  color: var(--color-text) !important;
+  transform: translateY(-2px);
+}
+
+#ct-btn svg,
+#ct-btn-secondary svg {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+#ct-btn:hover svg,
+#ct-btn-secondary:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* ── FOOTER ── */
+
+#main-footer {
+  width: 100%;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  padding: 5vw 8vw 2vw 8vw;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-poppins), "Poppins", sans-serif;
+  /* Sits above the GradualBlur overlay (zIndex 99999 in app/page.js)
+     so the blur effect never visually covers the footer. */
+  z-index: 100000;
+  position: relative;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 4vw;
+  border-bottom: 2px solid var(--color-border);
+  gap: 4vw;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vw;
+  width: 40%;
+}
+
+.f-logo {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 0 0.5vw;
+  transition: transform 0.35s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.f-logo:hover {
+  transform: translateY(-3px);
+}
+
+/* The artwork carries roughly 28% transparent padding, so it is rendered
+   larger than its visual size and pulled back with a negative margin. */
+.f-logo__img {
+  height: clamp(3.6rem, 6vw, 5.5rem);
+  width: auto;
+  max-width: none;
+  margin-left: -0.6rem;
+  object-fit: contain;
+}
+
+/* Contact line under the description. */
+.f-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: fit-content;
+  font-size: clamp(0.85rem, 1vw, 0.98rem);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    gap 0.3s ease;
+}
+
+.f-mail svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+}
+
+.f-mail:hover {
+  color: var(--color-brand-orange);
+  gap: 0.85rem;
+}
+
+.f-desc {
+  font-size: 1.1vw;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+.f-socials {
+  display: flex;
+  gap: 1vw;
+  margin-top: 1vw;
+}
+
+.f-socials a {
+  width: 3vw;
+  height: 3vw;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: all 0.4s ease;
+  background-color: var(--color-bg-alt);
+}
+
+.f-socials a:hover {
+  background-color: var(--color-brand-orange);
+  border-color: var(--color-brand-orange);
+  color: #fff;
+  transform: translateY(-0.4vw) rotate(-8deg);
+}
+
+.footer-links {
+  display: flex;
+  gap: 6vw;
+}
+
+.f-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vw;
+}
+
+.f-col h3 {
+  font-family: var(--font-poppins), "Poppins", sans-serif;
+  font-size: 1.1vw;
+  color: var(--color-text);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.8vw;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.f-col a {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 1vw;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  position: relative;
+  width: fit-content;
+}
+
+.f-col a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 1.5px;
+  bottom: -3px;
+  left: 0;
+  background-color: var(--color-brand-orange);
+  transition: width 0.35s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.f-col a:hover {
+  color: var(--color-brand-orange);
+  transform: translateX(4px);
+}
+
+.f-col a:hover::after {
+  width: 100%;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2vw;
+  font-size: 0.85vw;
+  color: var(--color-text-subtle);
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+.footer-bottom-links {
+  display: flex;
+  gap: 2vw;
+  align-items: center;
+}
+
+.footer-bottom-links a {
+  color: var(--color-text-subtle);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-bottom-links a:hover {
+  color: var(--color-text);
+}
+
+/* Dropdown menu links — the arrow slides in from behind the label on hover. */
+.menu-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: var(--color-text);
+  transition:
+    color 0.25s ease,
+    transform 0.35s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.menu-link__arrow {
+  color: var(--color-brand-orange);
+  opacity: 0;
+  transform: translateX(-0.6rem);
+  transition:
+    opacity 0.25s ease,
+    transform 0.35s cubic-bezier(0.22, 0.85, 0.24, 1);
+}
+
+.menu-link:hover {
+  color: var(--color-brand-orange);
+  transform: translateX(5px);
+}
+
+.menu-link:hover .menu-link__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── MOBILE / TABLET ── */
+@media (max-width: 1024px) {
+  /* Contact — slightly larger eyebrow / button text on tablet */
+  #ct-eyebrow {
+    font-size: 1.4vw;
+    letter-spacing: 0.2em;
+  }
+  #ct-email {
+    font-size: 2vw;
+  }
+  #ct-btn,
+  #ct-btn-secondary {
+    height: 6vh;
+    min-height: 44px;
+    font-size: 1.2vw;
+    padding: 0 3vw;
+  }
+
+  /* Footer — tablet font scaling */
+  .f-desc {
+    font-size: 1.5vw;
+  }
+  .f-col h3 {
+    font-size: 1.5vw;
+  }
+  .f-col a {
+    font-size: 1.4vw;
+  }
+  .footer-bottom {
+    font-size: 1.2vw;
+  }
+  .f-socials a {
+    width: 4vw;
+    height: 4vw;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Loader — tablet size */
+  #loader-counter {
+    font-size: 13vw;
+    padding-right: 6.5vw;
+    padding-bottom: 11vw;
+  }
+
+  /* Hero — tablet sizing. The two-column layout collapses into a single
+     stacked column so the headline keeps its scale on narrow screens. */
+  #hero-section {
+    height: 100svh;
+    min-height: 100svh;
+  }
+
+  #hero-bg {
+    object-position: center 26%;
+  }
+
+  #hero-scrim {
+    background: linear-gradient(
+      to top,
+      rgba(8, 10, 14, 0.9) 0%,
+      rgba(8, 10, 14, 0.7) 34%,
+      rgba(8, 10, 14, 0.18) 62%,
+      rgba(8, 10, 14, 0.08) 100%
+    );
+  }
+
+  #hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  #hero-title {
+    font-size: clamp(2.4rem, 8.5vw, 4rem);
+  }
+
+  #hero-aside {
+    padding-bottom: 0;
+  }
+
+  #hero-lede {
+    max-width: 46ch;
+  }
+
+  /* Horizontal scroll — tablet heading scaling */
+  .Horizontal .heading-xl {
+    font-size: clamp(2.2rem, 14vw, 5rem);
+    line-height: 1.05;
+    padding: 0 4vw;
+  }
+
+  /* Contact section — tablet sizing */
+  #contact-section {
+    height: auto;
+    min-height: 70vh;
+    padding: 2vw 5vw;
+    gap: 2.5vw;
+  }
+
+  #ct-eyebrow {
+    font-size: 2.8vw;
+    letter-spacing: 0.15em;
+    white-space: normal;
+  }
+
+  #ct-headline {
+    margin: 1.5vw 0;
+  }
+
+  #ct-headline img {
+    width: clamp(14rem, 70vw, 35rem);
+    height: clamp(6rem, 28vw, 16rem);
+  }
+
+  #ct-email {
+    font-size: 3.2vw;
+    margin-top: 1.5vw;
+  }
+
+  #ct-actions {
+    margin-top: 3vw;
+    gap: 2.5vw;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  #ct-btn,
+  #ct-btn-secondary {
+    width: 80vw;
+    max-width: 100%;
+    height: auto;
+    min-height: 56px;
+    padding: 18px 24px;
+    font-size: 3vw;
+    letter-spacing: 0.2em;
+  }
+
+  #ct-btn svg,
+  #ct-btn-secondary svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Footer */
+  #main-footer {
+    padding: 8vw 6vw 6vw 6vw;
+  }
+
+  .footer-top {
+    flex-direction: column;
+    gap: 8vw;
+    padding-bottom: 8vw;
+  }
+
+  .footer-brand {
+    width: 100%;
+    gap: 4vw;
+  }
+
+  .f-desc {
+    font-size: 4vw;
+    line-height: 1.5;
+  }
+
+  .f-socials {
+    gap: 3vw;
+    margin-top: 3vw;
+  }
+
+  .f-socials a {
+    width: 11vw;
+    height: 11vw;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 48px;
+    max-height: 48px;
+  }
+
+  .footer-links {
+    gap: 10vw;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .f-col {
+    gap: 3vw;
+  }
+
+  .f-col h3 {
+    font-size: 3.2vw;
+    margin-bottom: 2vw;
+  }
+
+  .f-col a {
+    font-size: 4vw;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4vw;
+    padding-top: 6vw;
+    font-size: 3vw;
+  }
+
+  .footer-bottom-links {
+    gap: 4vw;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  #hero-title {
+    font-size: clamp(2.1rem, 10vw, 3.2rem);
+  }
+
+  #hero-lede {
+    font-size: 0.95rem;
+  }
+
+  #hero-actions {
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .hero-btn--primary {
+    flex: 1;
+    padding: 0.9rem 1.2rem;
+  }
+
+  .hero-badge__text {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+
+  #ct-eyebrow {
+    font-size: 3.6vw;
+  }
+
+  #ct-headline {
+    font-size: clamp(3rem, 26vw, 7rem);
+  }
+
+  #ct-email {
+    font-size: 4vw;
+    word-break: break-all;
+    text-align: center;
+  }
+
+  #ct-btn,
+  #ct-btn-secondary {
+    font-size: 3.6vw;
+    width: 86vw;
+  }
+
+  .footer-bottom {
+    font-size: 3.4vw;
+  }
+}
+
+/* ── ULTRA-MOBILE (≤ 480px) EXTRA POLISH ──
+   Small-phone adjustments that layer on top of the 768px rules above.
+   Touch targets stay ≥44px, long words break cleanly, and elements
+   never exceed the viewport width. */
+@media (max-width: 480px) {
+  /* Contact spacing — give the stacked layout room to breathe */
+  #contact-section {
+    padding: 20vw 6vw 14vw 6vw;
+    min-height: auto;
+    gap: 4vw;
+  }
+
+  #ct-actions {
+    margin-top: 5vw;
+    gap: 3vw;
+  }
+
+  #ct-btn,
+  #ct-btn-secondary {
+    letter-spacing: 0.18em;
+    min-height: 54px;
+  }
+
+  /* Footer — tighten column gap so 2 columns fit per row on narrow
+     phones without becoming a single column that creates huge blank
+     vertical space */
+  .footer-links {
+    gap: 8vw 6vw;
+  }
+
+  .f-col h3 {
+    font-size: 3.6vw;
+  }
+
+  .f-col a {
+    font-size: 4.2vw;
+    word-break: break-word;
+  }
+
+  /* Horizontal scroll pin section — height shrinks on tiny viewports so
+     there isn't a huge empty-looking pinned area while the headline
+     horizontally pans across. */
+  .Horizontal .hs-sticky {
+    height: 70vh;
+    min-height: 360px;
+  }
+
+  .Horizontal .heading-xl {
+    font-size: clamp(2rem, 15vw, 4.5rem);
+  }
+}
+
+/* ── VERY SMALL PHONES (≤ 360px) ──
+   Extra safety net for iPhone SE-class widths so nothing overflows. */
+@media (max-width: 360px) {
+  #hero-title {
+    font-size: clamp(1.9rem, 10.5vw, 2.6rem);
+  }
+
+  #ct-headline {
+    font-size: clamp(2.6rem, 24vw, 5.5rem);
+  }
+}
+
+/* ── TOUCH DEVICE HOVER CLEANUP ──
+   Some of the nav/CTA components use :hover for reveal effects. On touch
+   devices those hovers either "stick" after tap or never fire at all, so
+   we disable them here to keep tap feedback consistent. */
+@media (hover: none) and (pointer: coarse) {
+}
