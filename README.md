@@ -48,8 +48,8 @@ Site institucional e landing page da **Ozarp**, uma instituição de pagamento (
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/tefooh/elfekky-portfolio.git
-cd elfekky-portfolio
+git clone https://github.com/Mathdino/ozarp.git
+cd ozarp
 ```
 
 2. Instale as dependências:
@@ -82,7 +82,7 @@ npm run lint
 ## 📁 Estrutura do Projeto
 
 ```
-elfekky-portfolio/
+ozarp/
 ├── app/
 │   ├── globals.css         # Tokens de tema, estilos globais e seções
 │   ├── layout.js           # Root layout (fontes Poppins + Epilogue, script anti-flash tema)
@@ -144,28 +144,26 @@ elfekky-portfolio/
 
 ## 🎨 Componentes Principais
 
-| Componente           | Pasta                                                                                                                                            | Descrição                                                            |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
-| **Navbar**           | [Navbar/Navbar.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/Navbar/Navbar.jsx)                                         | Header flutuante (pill) com scroll state, menu mobile, botão de tema |
-| **HeroSection**      | [HeroSection/HeroSection.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/HeroSection/HeroSection.jsx)                     | Landing hero com vídeo, CTAs e gradiente scrim                       |
-| **Skiggle**          | [Featured/Skiggle.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/Featured/Skiggle.jsx)                                   | Faixa SVG animada (SVG stroke draw) atrás da seção #about            |
-| **Projects**         | [Projects/Projects.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/Projects/Projects.jsx)                                 | Painel de investimentos com gradiente em malha pastel                |
-| **AppShowcase**      | [AppShowcase/AppShowcase.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/AppShowcase/AppShowcase.jsx)                     | Seção do app com features e estatísticas                             |
-| **CardShowcase**     | [CardShowcase/CardShowcase.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/CardShowcase/CardShowcase.jsx)                 | Painel azul do cartão com 4 feature tiles                            |
-| **HorizontalScroll** | [HorizontalScroll/HorizontalScroll.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/HorizontalScroll/HorizontalScroll.jsx) | Tipografia gigante em scroll horizontal (GSAP pinned)                |
-| **Contact**          | [Contact/Contact.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/Contact/Contact.jsx)                                     | Logo grande + CTAs App Store / Google Play                           |
-| **SiteFooter**       | [SiteFooter/SiteFooter.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/SiteFooter/SiteFooter.jsx)                         | Rodapé com navegação, redes sociais e links legais                   |
-| **Logo**             | [Logo/Logo.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/Logo/Logo.jsx)                                                 | Logo reutilizável que troca para `logo-dark.png` no tema escuro      |
-| **GradualBlur**      | [GradualBlur/GradualBlur.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/GradualBlur/GradualBlur.jsx)                     | Overlay de blur progressivo na base da viewport                      |
-| **LiquidEther**      | [LiquidEther/LiquidEther.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/LiquidEther/LiquidEther.jsx)                     | Shader / efeito de fundo animado                                     |
+| Componente           | Pasta                                              | Descrição                                                            |
+| -------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
+| **Navbar**           | `components/Navbar/Navbar.jsx`                     | Header flutuante (pill) com scroll state, menu mobile, botão de tema |
+| **HeroSection**      | `components/HeroSection/HeroSection.jsx`           | Landing hero com vídeo, CTAs e gradiente scrim                       |
+| **Skiggle**          | `components/Featured/Skiggle.jsx`                  | Faixa SVG animada (SVG stroke draw) atrás da seção #about            |
+| **Projects**         | `components/Projects/Projects.jsx`                 | Painel de investimentos com gradiente em malha pastel                |
+| **AppShowcase**      | `components/AppShowcase/AppShowcase.jsx`           | Seção do app com features e estatísticas                             |
+| **CardShowcase**     | `components/CardShowcase/CardShowcase.jsx`         | Painel azul do cartão com 4 feature tiles                            |
+| **HorizontalScroll** | `components/HorizontalScroll/HorizontalScroll.jsx` | Tipografia gigante em scroll horizontal (GSAP pinned)                |
+| **Contact**          | `components/Contact/Contact.jsx`                   | Logo grande + CTAs App Store / Google Play                           |
+| **SiteFooter**       | `components/SiteFooter/SiteFooter.jsx`             | Rodapé com navegação, redes sociais e links legais                   |
+| **Logo**             | `components/Logo/Logo.jsx`                         | Logo reutilizável que troca para `logo-dark.png` no tema escuro      |
+| **GradualBlur**      | `components/GradualBlur/GradualBlur.jsx`           | Overlay de blur progressivo na base da viewport                      |
+| **LiquidEther**      | `components/LiquidEther/LiquidEther.jsx`           | Shader / efeito de fundo animado                                     |
 
 ## 🎨 Sistema de Tema
 
 O tema claro/escuro é controlado pelo atributo `data-theme` no `<html>`:
 
 1. **Bootstrap sem flash** — Em `app/layout.js`, um script inline roda _antes_ da pintura do body, lê `localStorage.getItem('theme')` e aplica `data-theme="dark"` ou `"light"` imediatamente.
-2. **Alternância** — O botão em [MusicButton.jsx](file:///c:/Users/User/Downloads/elfekky-portfolio-main/components/Navbar/MusicButton.jsx) chama `document.documentElement.dataset.theme = next` e salva em `localStorage`.
+2. **Alternância** — O botão em `components/Navbar/MusicButton.jsx` chama `document.documentElement.dataset.theme = next` e salva em `localStorage`.
 3. **Logo reativo** — O componente `Logo` usa o hook `useTheme`, que observa mudanças no atributo via `MutationObserver` e troca `/logo.png` ↔ `/logo-dark.png` em tempo real em _todos_ os pontos de uso (Navbar, Contact, SiteFooter).
 4. **Tokens CSS** — Todas as cores são variáveis CSS (`--color-bg`, `--color-accent`, `--color-brand-orange`, etc.) com override em `[data-theme="dark"]`.
-#   o z a r p  
- 
