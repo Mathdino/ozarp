@@ -3,5 +3,8 @@
   overflow: hidden;
   width: 100%;
   height: 100%;
-  touch-action: none;
+  /* `pan-y` rather than `none`: the fluid effect only needs to read the touch
+     position, and its listeners are already passive. Blocking every gesture
+     would also block vertical page scrolling wherever this canvas is used. */
+  touch-action: pan-y;
 }

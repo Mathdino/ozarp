@@ -237,6 +237,18 @@ html {
   background-color: black;
 }
 
+/* Once the intro is over the loader is only translated off-screen, so it stays
+   in the DOM as a full-viewport, top-of-stack layer with `touch-action: none`.
+   On mobile that layer can still swallow single-finger panning (leaving the
+   page scrollable only with a two-finger pinch-pan), so take it out of the
+   touch and hit-testing paths entirely as soon as it's done. Added from
+   `HeroSection.jsx`. */
+#loader.is-done {
+  touch-action: auto;
+  pointer-events: none;
+  visibility: hidden;
+}
+
 #loader-counter {
   color: #f9f8ff;
   font-size: 6vw;

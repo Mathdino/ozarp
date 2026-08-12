@@ -14,11 +14,19 @@ const SmoothScroll = ({ children }) => {
       typeof window !== "undefined" &&
       (window.matchMedia("(hover: none), (pointer: coarse)").matches || window.innerWidth < 1024);
 
+    // `smooth` / `smoothTouch` were Lenis v0 option names — v1 silently ignores
+    // them, so the config below reads as intended but wasn't actually doing
+    // anything. The v1 equivalents are `smoothWheel` and `syncTouch`.
+    //
+    // `syncTouch` stays off on purpose: hijacking touch means Lenis has to call
+    // preventDefault() on every touchmove, which trades the phone's native
+    // (and already smooth) scrolling for something that stutters and fights
+    // the browser. Touch devices get native scrolling; the wheel gets Lenis.
     const lenis = new Lenis({
       duration: isTouch ? 1.0 : 1.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: !isTouch,
-      smoothTouch: false,
+      smoothWheel: !isTouch,
+      syncTouch: false,
       touchMultiplier: isTouch ? 1.5 : 0.25,
     });
 

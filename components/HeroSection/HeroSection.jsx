@@ -76,7 +76,32 @@ const HeroSection = () => {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+
+    // The intro locks the page while the loader is up. Releasing it has to be
+    // bulletproof: the loader is a full-screen `position: fixed` layer with
+    // `touch-action: none`, so if the lock ever survives the animation the
+    // page is left unscrollable on touch devices — a single finger does
+    // nothing and only a two-finger pinch-pan moves the visual viewport.
+    let released = false;
+    const releaseScroll = () => {
+      if (released) return;
+      released = true;
+      document.body.style.overflow = "";
+      if (loaderRef.current) loaderRef.current.classList.add("is-done");
+    };
+
     document.body.style.overflow = "hidden";
+
+    // The timeline is driven by requestAnimationFrame, which mobile browsers
+    // pause whenever the tab goes to the background. A visitor who opens the
+    // page and switches apps during the ~3.6s intro would come back to a
+    // timeline that never fired `onComplete`. Both of these guarantee the
+    // page comes back unlocked no matter what interrupts the animation.
+    const onVisibilityChange = () => {
+      if (document.hidden) releaseScroll();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    const failsafe = window.setTimeout(releaseScroll, 6000);
 
     const titleLines = titleRef.current
       ? titleRef.current.querySelectorAll(".hero-line__inner")
@@ -91,11 +116,7 @@ const HeroSection = () => {
     gsap.set(titleLines, { yPercent: 130 });
     gsap.set([badgeRef.current, ...asideItems], { autoAlpha: 0, y: 28 });
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        document.body.style.overflow = "";
-      },
-    });
+    const tl = gsap.timeline({ onComplete: releaseScroll });
 
     const counter = { value: 0 };
 
@@ -122,6 +143,11 @@ const HeroSection = () => {
     );
 
     tl.to(loaderRef.current, { y: "-100%", duration: 1.3, ease: "power3.inOut" }, "anim+=1.8");
+
+    // Hand scrolling back the moment the loader has cleared the screen, rather
+    // than waiting for the last reveal to finish. The remaining tweens are
+    // purely decorative and don't need the page frozen.
+    tl.call(releaseScroll, null, "anim+=3.1");
 
     // The photo settles out of its slight zoom as the loader clears — the
     // whole hero feels like one continuous camera move.
@@ -159,10 +185,12 @@ const HeroSection = () => {
     });
 
     return () => {
+      window.clearTimeout(failsafe);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       tl.kill();
       if (parallax.scrollTrigger) parallax.scrollTrigger.kill();
       parallax.kill();
-      document.body.style.overflow = "";
+      releaseScroll();
     };
   }, []);
 
