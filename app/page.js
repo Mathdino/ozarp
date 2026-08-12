@@ -30,7 +30,7 @@ export default function Home() {
     console.clear();
     console.log(
       "%cCREATED BY MTARIF.COM",
-      "background: #D9E6FF; color: #0f172a; font-size: 16px; font-weight: 800; padding: 10px 16px; border-radius: 10px; letter-spacing: 2px;"
+      "background: #D9E6FF; color: #0f172a; font-size: 16px; font-weight: 800; padding: 10px 16px; border-radius: 10px; letter-spacing: 2px;",
     );
   }, []);
 
@@ -48,8 +48,7 @@ export default function Home() {
     // from the footer's current viewport position so a hard reload anywhere
     // on the page lands in the correct state, then keep it in sync as the
     // user scrolls past the footer in either direction.
-    const setVisible = (visible) =>
-      gsap.to(blur, { autoAlpha: visible ? 1 : 0, duration: 0.3 });
+    const setVisible = (visible) => gsap.to(blur, { autoAlpha: visible ? 1 : 0, duration: 0.3 });
 
     const footerInView = footer.getBoundingClientRect().top < window.innerHeight;
     gsap.set(blur, { autoAlpha: footerInView ? 0 : 1 });
@@ -69,70 +68,70 @@ export default function Home() {
 
   return (
     <SmoothScroll>
-    <Suspense
-      fallback={
-        <div className="w-screen bg-black h-screen text-white text-4xl md:text-7xl lg:text-9xl flex items-center justify-center">
-          Loading...
-        </div>
-      }
-    >
-      <div className="bg-bg text-fg h-auto w-screen overflow-x-hidden">
-        <Navbar />
+      <Suspense
+        fallback={
+          <div className="w-screen bg-black h-screen text-white text-4xl md:text-7xl lg:text-9xl flex items-center justify-center">
+            Loading...
+          </div>
+        }
+      >
+        <div className="bg-bg text-fg h-auto w-screen overflow-x-hidden">
+          <Navbar />
 
-        <HeroSection />
-        {/* </div> */}
-        {/* Benefits section — Skiggle keeps drawing its blue ribbon behind
+          <HeroSection />
+          {/* </div> */}
+          {/* Benefits section — Skiggle keeps drawing its blue ribbon behind
             the content as the user scrolls. */}
-        <div
-          id="about"
-          className="benefits relative mt-16 md:mt-[10rem] pb-20 md:pb-32"
-          ref={ref}
-        >
-          <Skiggle />
-          <Header />
-          <SubHeader />
-        </div>
+          <div
+            id="about"
+            className="benefits relative mt-16 md:mt-[10rem] pb-20 md:pb-32"
+            ref={ref}
+          >
+            <Skiggle />
+            <Header />
+            <SubHeader />
+          </div>
 
-        <Projects />
+          <Projects />
 
-        <AppShowcase />
+          <AppShowcase />
 
-        <CardShowcase />
+          <CardShowcase />
 
-        <HorizontalScroll />
-        <Contact />
-        <SiteFooter />
+          <HorizontalScroll />
+          <Contact />
+          <SiteFooter />
 
-        {/* GradualBlur — hidden when footer is in view */}
-        <div
-          ref={blurRef}
-          aria-hidden="true"
-          style={{
-            position: "fixed",
-            inset: 0,
-            pointerEvents: "none",
-            zIndex: 99999,
-          }}
-        >
-          <GradualBlur
-            target="parent"
-            position="bottom"
-            height="6rem"
-            strength={2}
-            divCount={6}
-            curve="bezier"
-            exponential={false}
-            opacity={0.9}
-            zIndex={1}
-          />
-        </div>
-        {/* <FeaturedWork />
+          {/* GradualBlur — hidden when footer is in view */}
+          <div
+            ref={blurRef}
+            aria-hidden="true"
+            style={{
+              position: "fixed",
+              inset: 0,
+              pointerEvents: "none",
+              zIndex: 99999,
+            }}
+          >
+            <GradualBlur
+              target="parent"
+              position="bottom"
+              height="6rem"
+              strength={2}
+              divCount={6}
+              curve="bezier"
+              exponential={false}
+              opacity={0.9}
+              zIndex={1}
+            />
+          </div>
+          {/* <FeaturedWork />
         <Connection className="" />
         <div className="mt-80 w-full h-screen relative">
           <Experience className="w-full h-full rounded-3xl" />
         </div> */}
-        {/* <div className="bg-brblue flex items-center justify-center w-full h-screen font-extrabold text-9xl"> this is the footer  </div> */}
-        {/* <div className="relative">
+          {/* <div className="bg-brblue flex items-center justify-center w-full h-screen font-extrabold text-9xl"> this is the footer  </div> */}
+          {/* <div className="relative">
           <div className="absolute text-9xl font-bold text-center w-full h-full top-80">
             HIRE       ME
           </div>
@@ -141,8 +140,8 @@ export default function Home() {
             made by mtarif
           </div>
         </div> */}
-      </div>
-    </Suspense>
+        </div>
+      </Suspense>
     </SmoothScroll>
   );
 }
