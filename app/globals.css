@@ -91,7 +91,6 @@
 
 html,
 body {
-  overflow-x: hidden;
   width: 100%;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
@@ -113,9 +112,32 @@ body {
     color 0.3s ease;
 }
 
+/* The page has content that deliberately runs wider than the viewport (the
+   horizontal-scroll headline, the hero photo, the card cut-out). That overflow
+   has to be clipped — but WHERE it's clipped matters a lot on mobile.
+
+   `overflow-x: hidden` on <body> makes the body its own scroll container. The
+   viewport then stops being the thing that scrolls the document, and mobile
+   Safari/Chrome lose one-finger panning over it: the page only moves under a
+   two-finger pinch-pan gesture. Declaring it on <html> alone avoids that,
+   because <html>'s overflow propagates to the viewport instead of turning the
+   element into a scroller.
+
+   `clip` is used in preference to `hidden` for the same reason — it clips
+   without ever establishing a scroll container. `hidden` stays as the fallback
+   for Safari < 16, which doesn't understand `clip`. */
+html {
+  overflow-x: hidden;
+}
+
+@supports (overflow: clip) {
+  html {
+    overflow-x: clip;
+  }
+}
+
 body {
   overscroll-behavior-y: none;
-  -webkit-overflow-scrolling: touch;
   min-height: 100vh;
   min-height: 100svh;
 }
