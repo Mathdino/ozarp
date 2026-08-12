@@ -91,7 +91,6 @@
 
 html,
 body {
-  overscroll-behavior: none;
   overflow-x: hidden;
   width: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -112,6 +111,13 @@ body {
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
+}
+
+body {
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 img,

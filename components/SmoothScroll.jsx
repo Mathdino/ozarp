@@ -12,15 +12,12 @@ const SmoothScroll = ({ children }) => {
 
     const isTouch =
       typeof window !== "undefined" &&
-      (window.matchMedia("(hover: none), (pointer: coarse)").matches ||
-        window.innerWidth < 1024);
+      (window.matchMedia("(hover: none), (pointer: coarse)").matches || window.innerWidth < 1024);
 
     const lenis = new Lenis({
       duration: isTouch ? 1.0 : 1.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-      // On touch devices, native scrolling feels best — disable Lenis touch
-      // smoothing and let the browser handle inertial scrolling natively.
+      smooth: !isTouch,
       smoothTouch: false,
       touchMultiplier: isTouch ? 1.5 : 0.25,
     });
